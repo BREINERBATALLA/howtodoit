@@ -1,0 +1,26 @@
+spring:
+  config:
+    import: optional:configserver:http://localhost:8888
+  application:
+    name: gateway
+  cloud:
+    gateway:
+      routes:
+        - id: student #ctrl + d, duplicate line.        uri: lb://payment-service , lb indicate to use spring cloud load balancer. payment-service, name of application running on service registry.
+          uri: lb://student #Where gateway is gonna redirect the request domain and port where service is running.
+          predicates:
+            - Path=/api/v1/students/**  #When the path contains the following, redirect to uri that request.
+        - id: school
+          uri: lb://school #Where gateway is gonna redirect the request domain and port where service is running.
+          predicates: #Must be exactly, without spaces between them
+            - Path=/api/v1/schools/**  #When the path contains the following, redirect to uri that request.
+      discovery:
+        locator:
+          enabled: true #To fetch from disvoery. gateway discover services using DiscoveryClient automatically(like Eureka)
+eureka:
+  client:
+    register-with-eureka: false #By default is true.
+  # fetch-registry: true , by default. no needed because of line above.
+server:
+  port: 8088
+

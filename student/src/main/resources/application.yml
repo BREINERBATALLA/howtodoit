@@ -1,0 +1,31 @@
+spring:
+  application:
+    name: student
+  config:
+    import: optional:configserver:http://localhost:8888
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/students
+    username: postgres
+    password: root
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+server:
+  port: ${PORT:0} #Dynamic port
+
+eureka:
+  instance:
+    hostname: localhost #Because discovery service is running locally. (profiles)
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+  client:
+    service-url:
+      defaultZone: http://${eureka.instance.hostname}:${eureka.client.server.port}/eureka/
+    server:
+      port: 8761
+
+
+
+
